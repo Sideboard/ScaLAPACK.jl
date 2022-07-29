@@ -1,0 +1,13 @@
+name = "ScaLAPACK"
+uuid = "6bc89718-bb85-4787-8c1c-2eb8717bee10"
+authors = ["Sascha Klawohn <sascha.klawohn@warwick.ac.uk>"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
