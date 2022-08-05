@@ -3,7 +3,10 @@ using MPI, Test
 nprocs = 2
 
 testdir = @__DIR__
-files = ["test_blacs.jl"]
+files = [
+    "test_blacs.jl",
+    "test_tools.jl",
+    ]
 
 for file in files
     mpiexec() do mpirun
