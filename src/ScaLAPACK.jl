@@ -7,6 +7,7 @@ export blacs_exit, blacs_get!, blacs_get, blacs_gridexit, blacs_gridinfo!, blacs
     blacs_gridinit, blacs_pinfo!, blacs_pinfo, blacs_setup!, blacs_setup
 export descinit!, descinit, numroc, sl_init!, sl_init
 export pdgemr2d!
+export pdgemm!, pdtrmm!
 
 const libscalapack = Libc.find_library("libscalapack")
 const libblacs = Libc.find_library("libscalapack")  # differs for Intel/MKL
@@ -18,5 +19,6 @@ include("error.jl")
 include("blacs.jl")
 include("tools.jl")
 include("redist.jl")
+include("pblas.jl")
 
 end

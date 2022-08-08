@@ -7,6 +7,7 @@ files = [
     "test_blacs.jl",
     "test_tools.jl",
     "test_redist.jl",
+    "test_pblas.jl",
     ]
 
 for file in files
