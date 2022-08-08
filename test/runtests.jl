@@ -6,12 +6,14 @@ testdir = @__DIR__
 files = [
     "test_blacs.jl",
     "test_tools.jl",
+    "test_redist.jl",
     ]
 
 for file in files
     mpiexec() do mpirun
         path = joinpath(testdir, file)
         cmd = `$mpirun -n $nprocs $(Base.julia_cmd()) $path`
-        run(cmd)
+        proc = run(cmd)
+        @test proc.exitcode == 0
     end
 end
