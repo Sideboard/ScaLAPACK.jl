@@ -8,6 +8,7 @@ files = [
     "test_tools.jl",
     "test_redist.jl",
     "test_pblas.jl",
+    "test_scalapack.jl",
     ]
 
 for file in files
