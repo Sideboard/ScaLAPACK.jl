@@ -33,8 +33,8 @@ jobs:
         env:
           MPI: ${{ matrix.mpi }}
         run: |
-          sudo apt update
-          sudo apt install $MPI
+          sudo apt-get update
+          sudo apt-get install $MPI
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
