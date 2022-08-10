@@ -27,6 +27,8 @@ jobs:
           - x64
         mpi:
           - libopenmpi-dev
+    env:
+      JULIA_MPI_TEST_BINARY: system
     steps:
       - uses: actions/checkout@v2
       - name: Install MPI
