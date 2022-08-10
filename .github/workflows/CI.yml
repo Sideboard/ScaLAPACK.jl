@@ -25,8 +25,16 @@ jobs:
           - ubuntu-latest
         arch:
           - x64
+        mpi:
+          - libopenmpi-dev
     steps:
       - uses: actions/checkout@v2
+      - name: Install MPI
+        env:
+          MPI: ${{ matrix.mpi }}
+        run: |
+          sudo apt update
+          sudo apt install $MPI
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
