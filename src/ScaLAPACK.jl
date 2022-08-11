@@ -1,6 +1,6 @@
 module ScaLAPACK
 
-import Libdl: find_library
+import Base.Libc.Libdl: find_library
 
 export libscalapack, libblacs
 export ScaLAPACKError
