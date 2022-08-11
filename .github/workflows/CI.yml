@@ -53,6 +53,7 @@ jobs:
         run: |
           ENV["JULIA_MPI_BINARY"]="system"
           using Pkg
+          Pkg.add("MPI")
           Pkg.build("MPI"; verbose=true)
           Pkg.precompile()
       - name: TEST runtests (manual)
