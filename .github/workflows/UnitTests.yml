@@ -30,7 +30,6 @@ jobs:
     env:
       JULIA_MPI_TEST_NPROCS: 2
       JULIA_MPI_TEST_BINARY: system
-      DL_LOAD_PATH: /usr/lib/x86_64-linux-gnu
       JULIA_SCALAPACK_LIBRARY: ${{ matrix.scalapack }}
     steps:
       - uses: actions/checkout@v2
