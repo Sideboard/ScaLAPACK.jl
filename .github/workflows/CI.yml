@@ -55,7 +55,6 @@ jobs:
           using Pkg
           Pkg.add("MPI")
           Pkg.build("MPI"; verbose=true)
-          Pkg.precompile()
       - name: TEST runtests (manual)
         run: julia --color=yes --project=test test/runtests.jl
       - uses: julia-actions/julia-runtest@v1
