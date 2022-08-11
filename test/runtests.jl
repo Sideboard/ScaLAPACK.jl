@@ -1,5 +1,7 @@
 using MPI, Test
 
+@show MPI.MPI_LIBRARY_VERSION_STRING
+
 nprocs = 2
 
 testdir = @__DIR__
