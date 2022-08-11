@@ -51,8 +51,6 @@ jobs:
           Pkg.add("MPIPreferences")
           using MPIPreferences
           MPIPreferences.use_system_binary(export_prefs=true)
-          Pkg.build("MPI")
-          rm("test/Manifest.toml")
       - name: TEST build
         shell: julia --color=yes --project=test {0}
         run: |
