@@ -25,18 +25,15 @@ jobs:
           - ubuntu-latest
         arch:
           - x64
-        mpi:
-          - libopenmpi-dev
     env:
+      JULIA_MPI_TEST_NPROCS: 2
       JULIA_MPI_TEST_BINARY: system
     steps:
       - uses: actions/checkout@v2
       - name: Install MPI
-        env:
-          MPI: ${{ matrix.mpi }}
         run: |
-          sudo apt-get update
-          sudo apt-get install $MPI
+          sudo apt-get update -y
+          sudo apt-get install -y libscalapack-openmpi-dev
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
