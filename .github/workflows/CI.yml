@@ -18,9 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.0'
+          # - '1.0'
           - '1.7'
-          - 'nightly'
+          # - 'nightly'
         os:
           - ubuntu-latest
         arch:
@@ -28,6 +28,7 @@ jobs:
     env:
       JULIA_MPI_TEST_NPROCS: 2
       JULIA_MPI_TEST_BINARY: system
+      DL_LOAD_PATH: /usr/lib/x86_64-linux-gnu
     steps:
       - uses: actions/checkout@v2
       - name: Install MPI
@@ -39,25 +40,26 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
+      - 
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
-  docs:
-    name: Documentation
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
-      - uses: julia-actions/setup-julia@v1
-        with:
-          version: '1'
-      - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-docdeploy@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          julia --project=docs -e '
-            using Documenter: DocMeta, doctest
-            using ScaLAPACK
-            DocMeta.setdocmeta!(ScaLAPACK, :DocTestSetup, :(using ScaLAPACK); recursive=true)
-            doctest(ScaLAPACK)'
+  # docs:
+  #   name: Documentation
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: julia-actions/setup-julia@v1
+  #       with:
+  #         version: '1'
+  #     - uses: julia-actions/julia-buildpkg@v1
+  #     - uses: julia-actions/julia-docdeploy@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - run: |
+  #         julia --project=docs -e '
+  #           using Documenter: DocMeta, doctest
+  #           using ScaLAPACK
+  #           DocMeta.setdocmeta!(ScaLAPACK, :DocTestSetup, :(using ScaLAPACK); recursive=true)
+  #           doctest(ScaLAPACK)'
