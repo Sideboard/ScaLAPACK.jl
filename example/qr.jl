@@ -132,7 +132,7 @@ function main()
     args = parse_commandline()
 
     mypnum, nprocs = blacs_pinfo()
-    args["allout"] && mypnum != 0 && redirect_stdout(devnull)
+    args["allout"] && mypnum != 0 && redirect_stdout(open("/dev/null", "w"))
 
     ictxt = blacs_get(0, 0)
     blacs_gridinit(ictxt, args["order"], nprocs, 1)
