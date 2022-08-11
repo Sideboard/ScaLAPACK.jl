@@ -65,6 +65,7 @@ jobs:
         run: |
           using Pkg
           using MPIPreferences
+          Pkg.instantiate()
           Pkg.build("MPI")
           rm("test/Manifest.toml")
       - name: TEST runtests (manual)
