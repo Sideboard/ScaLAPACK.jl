@@ -46,7 +46,7 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - name: Get system info
         run: |
-          sysname -a
+          uname -a
           lscpu
       - name: TEST Add MPIPreferences, use system
         shell: julia --color=yes --project=test {0}
