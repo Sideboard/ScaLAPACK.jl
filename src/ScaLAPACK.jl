@@ -10,10 +10,12 @@ export pdgemr2d!
 export pdgemm!, pdtrmm!
 export pdgeqrf!, pdorgqr!, pdormqr!, pdtrtrs!
 
-const libscalapack = Libc.find_library("libscalapack")
-const libblacs = Libc.find_library("libscalapack")  # differs for Intel/MKL
-libscalapack == "" && error("ScaLAPACK library not found")
-libblacs == "" && error("BLACS library not found")
+const libscalapack_name = get(ENV, "JULIA_SCALAPACK_LIBRARY", "libscalapack")
+const libblacs_name = get(ENV, "JULIA_BLACS_LIBRARY", "libscalapack")
+const libscalapack = Libc.find_library(libscalapack_name)
+const libblacs = Libc.find_library(libblacs_name)  # differs for Intel/MKL
+libscalapack == "" && error("ScaLAPACK library $libscalapack_name not found")
+libblacs == "" && error("BLACS library $libblacs_name not found")
 
 include("error.jl")
 
