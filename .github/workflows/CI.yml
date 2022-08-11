@@ -34,7 +34,7 @@ jobs:
       JULIA_SCALAPACK_LIBRARY: ${{ matrix.scalapack }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install MPI
+      - name: Install ScaLAPACK
         run: |
           sudo apt-get update -y
           sudo apt-get install -y $JULIA_SCALAPACK_LIBRARY-dev
@@ -52,6 +52,11 @@ jobs:
           MPIPreferences.use_system_binary(export_prefs=true)
           Pkg.build("MPI")
           rm("test/Manifest.toml")
+      - name: build MPI
+        shell: julia --color=yes --project=test {0}
+        run: |
+          using Pkg
+          Pkg.build("MPI")
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
   # docs:
