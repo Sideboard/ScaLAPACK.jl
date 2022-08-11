@@ -1,6 +1,6 @@
 module ScaLAPACK
 
-import Base.Libc.Libdl: find_library  # explicit import backwards compatibility
+import Libdl: find_library  # explicit import backwards compatibility
 
 export libscalapack, libblacs
 export ScaLAPACKError
