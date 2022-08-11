@@ -2,8 +2,27 @@ include("common.jl")
 
 @testset "REDIST" begin
 
+function test_empty()
+@testset "[1x1(1x1)] {1X1}->{1X1} [1x1(1x1)]" begin
+    ictxt = sl_init(1, 1)
+    mypnum >= 1 && return
+
+    A = [1.0;;]
+    B = [0.0;;]
+    descA = descinit(0, 0, 1, 1, 0, 0, ictxt, 1)
+    descB = descinit(0, 0, 1, 1, 0, 0, ictxt, 1)
+
+    # pdgemr2d(m, n, A, ia, ja, desc_A, B, ib, jb, desc_B, gcontext)
+    pdgemr2d!(0, 0, A, 1, 1, descA, B, 1, 1, descB, ictxt)
+    @test A == [1.0;;]
+    @test B == [0.0;;]
+
+    blacs_gridexit(ictxt)
+end
+end
+
 function test_copy()
-@testset "[4x3(4x3)] {2X1}->{2X1} [4x3(4x3)<1,0>]" begin
+@testset "[4x3(4x3)] {2X1}->{2X1} [4x3(4x3)]" begin
     ictxt = sl_init(2, 1)
     mypnum >= 2 && return
 
@@ -87,6 +106,7 @@ end
 end
 
 @testset "pdgemr2d!" begin
+    test_empty()
     test_copy()
     test_change_blocksize()
     test_change_context()
