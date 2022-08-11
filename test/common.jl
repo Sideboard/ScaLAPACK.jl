@@ -13,7 +13,7 @@ function split_grid_full(nprocs)
 end
 
 mypnum, nprocs = blacs_pinfo()
-mypnum != 0 && redirect_stdout(devnull)
+mypnum != 0 && redirect_stdout(open("/dev/null", write=true))
 nprocs < 2 && error("ScaLAPACK.jl tests expect at least two processes, detected: $nprocs")
 
 grids = [(nprocs, 1), (1, nprocs)]
