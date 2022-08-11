@@ -48,25 +48,13 @@ jobs:
           uname -a
           lscpu
           type mpirun
-      - name: TEST Add MPIPreferences, use system
-        shell: julia --color=yes --project=. {0}
-        run: |
-          using Pkg
-          Pkg.add("MPIPreferences")
-      - name: TEST prebuild
+      - name: TEST Build
         shell: julia --color=yes --project=test {0}
         run: |
+          ENV["JULIA_MPI_BINARY"]="system"
           using Pkg
-          Pkg.add("MPIPreferences")
-          using MPIPreferences
-          MPIPreferences.use_system_binary(export_prefs=true)
-      - name: TEST build
-        shell: julia --color=yes --project=test {0}
-        run: |
-          using Pkg
-          using MPIPreferences
-          Pkg.instantiate()
-          Pkg.build("MPI")
+          Pkg.build("MPI"; verbose=true)
+          Pkg.precompile()
       - name: TEST runtests (manual)
         run: julia --color=yes --project=test test/runtests.jl
       - uses: julia-actions/julia-runtest@v1
