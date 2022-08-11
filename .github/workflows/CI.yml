@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 jobs:
   test:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ matrix.scalapack }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -25,16 +25,19 @@ jobs:
           - ubuntu-latest
         arch:
           - x64
+        scalapack:
+          - libscalapack-openmpi
     env:
       JULIA_MPI_TEST_NPROCS: 2
       JULIA_MPI_TEST_BINARY: system
       DL_LOAD_PATH: /usr/lib/x86_64-linux-gnu
+      JULIA_SCALAPACK_LIBRARY: ${{ matrix.scalapack }}
     steps:
       - uses: actions/checkout@v2
       - name: Install MPI
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libscalapack-openmpi-dev
+          sudo apt-get install -y $JULIA_SCALAPACK_LIBRARY-dev
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
