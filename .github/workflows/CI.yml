@@ -50,6 +50,7 @@ jobs:
           Pkg.add("MPIPreferences")
           using MPIPreferences
           MPIPreferences.use_system_binary(export_prefs=true)
+          Pkg.build("MPI")
           rm("test/Manifest.toml")
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
