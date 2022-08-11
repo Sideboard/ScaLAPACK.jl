@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.3'
+          - '1.4'
           - '1.7'
         os:
           - ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
-      - name: TEST Build
+      - name: Build test with 'system'
         env:
           JULIA_MPI_BINARY: system
         shell: julia --color=yes --project=test {0}
