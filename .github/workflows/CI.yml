@@ -43,6 +43,14 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
+      - name: add MPIPreferences, use system
+        shell: julia --color=yes --project=test {0}
+        run: |
+          using Pkg
+          Pkg.add("MPIPreferences")
+          using MPIPreferences
+          MPIPreferences.use_system_binary(export_prefs=true)
+          rm("test/Manifest.toml")
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
   # docs:
