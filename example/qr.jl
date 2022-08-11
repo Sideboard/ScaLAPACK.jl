@@ -89,8 +89,8 @@ function pmatrix_to_file(matrix, prefix, mypnum)
     end
 end
 
-function solve_qr!(A::Matrix{Float64}, descA::Vector{Cint},
-        B::Matrix{Float64}, descB::Vector{Cint})
+function solve_qr!(A::Array{Float64}, descA::Vector{Cint},
+        B::Array{Float64}, descB::Vector{Cint})
     mg = descA[3]
     ng = descA[4]
     @assert mg == descB[3]
