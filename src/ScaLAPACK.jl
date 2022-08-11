@@ -14,11 +14,11 @@ export pdgeqrf!, pdorgqr!, pdormqr!, pdtrtrs!
 
 
 const libscalapack_name = get(ENV, "JULIA_SCALAPACK_LIBRARY", "libscalapack")
-const libscalapack = Libc.find_library(libscalapack_name)
+const libscalapack = find_library(libscalapack_name)
 libscalapack == "" && error("ScaLAPACK library $libscalapack_name not found")
 
 const libblacs_name = get(ENV, "JULIA_BLACS_LIBRARY", libscalapack_name)
-const libblacs = Libc.find_library(libblacs_name)  # differs for Intel/MKL
+const libblacs = find_library(libblacs_name)  # differs for Intel/MKL
 libblacs == "" && error("BLACS library $libblacs_name not found")
 
 
