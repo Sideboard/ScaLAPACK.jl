@@ -52,6 +52,7 @@ jobs:
         shell: julia --color=yes --project=test {0}
         run: |
           using Pkg
+          Pkg.add("MPIPreferences")
           using MPIPreferences
           MPIPreferences.use_system_binary(export_prefs=true)
           rm("test/Manifest.toml")
