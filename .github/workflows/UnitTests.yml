@@ -26,6 +26,7 @@ jobs:
           - x64
         scalapack:
           - libscalapack-openmpi
+    timeout-minutes: 3
     env:
       JULIA_MPI_TEST_NPROCS: 2
       JULIA_MPI_TEST_BINARY: system
