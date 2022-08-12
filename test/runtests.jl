@@ -2,7 +2,7 @@ using MPI, Test
 
 @show MPI.MPI_LIBRARY_VERSION_STRING
 
-nprocs = 2
+nprocs = get(ENV, "JULIA_MPI_TEST_NPROCS", 2)
 
 testdir = @__DIR__
 files = [
