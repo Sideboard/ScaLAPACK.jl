@@ -1,0 +1,33 @@
+name: Documentation
+on:
+  push:
+    branches:
+      - main
+jobs:
+  docs:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      JULIA_SCALAPACK_LIBRARY: libscalapack-openmpi
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install ScaLAPACK
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libscalapack-openmpi-dev
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+          arch: x64
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-docdeploy@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          julia --project=docs -e '
+            using Documenter: DocMeta, doctest
+            using ScaLAPACK
+            DocMeta.setdocmeta!(ScaLAPACK, :DocTestSetup, :(using ScaLAPACK); recursive=true)
+            doctest(ScaLAPACK)'

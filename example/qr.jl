@@ -89,8 +89,8 @@ function pmatrix_to_file(matrix, prefix, mypnum)
     end
 end
 
-function solve_qr!(A::Matrix{Float64}, descA::Vector{Cint},
-        B::Matrix{Float64}, descB::Vector{Cint})
+function solve_qr!(A::Array{Float64}, descA::Vector{Cint},
+        B::Array{Float64}, descB::Vector{Cint})
     mg = descA[3]
     ng = descA[4]
     @assert mg == descB[3]
@@ -132,7 +132,7 @@ function main()
     args = parse_commandline()
 
     mypnum, nprocs = blacs_pinfo()
-    args["allout"] && mypnum != 0 && redirect_stdout(devnull)
+    args["allout"] && mypnum != 0 && redirect_stdout(open("/dev/null", "w"))
 
     ictxt = blacs_get(0, 0)
     blacs_gridinit(ictxt, args["order"], nprocs, 1)

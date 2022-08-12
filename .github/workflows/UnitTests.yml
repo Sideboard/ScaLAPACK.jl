@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+    tags: '*'
+  pull_request:
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ matrix.scalapack }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.2'
+          - '1.7'
+          - 'nightly'
+        os:
+          - ubuntu-latest
+        arch:
+          - x64
+        scalapack:
+          - libscalapack-openmpi
+    timeout-minutes: 5
+    env:
+      JULIA_MPI_TEST_NPROCS: 2
+      JULIA_MPI_TEST_BINARY: system
+      JULIA_SCALAPACK_LIBRARY: ${{ matrix.scalapack }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install ScaLAPACK
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y $JULIA_SCALAPACK_LIBRARY-dev
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: julia-actions/cache@v1
+      - name: Build test with 'system'
+        env:
+          JULIA_MPI_BINARY: system
+        shell: julia --color=yes --project=test {0}
+        run: |          
+          using Pkg
+          Pkg.add("MPI")
+          Pkg.build("MPI"; verbose=true)
+      - uses: julia-actions/julia-runtest@v1

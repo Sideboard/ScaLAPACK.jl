@@ -19,7 +19,7 @@ end
     @test descinit(9, 7, 5, 3, 1, 0, ictxt, 8) == Cint[1, ictxt, 9, 7, 5, 3, 1, 0, 8]
 
     # silence ScaLAPACK error output
-    redirect_stdout(devnull) do
+    redirect_stdout(open("/dev/null", "w")) do
         @test_throws ScaLAPACKError(-2) descinit(-1, 7, 5, 3, 1, 0, ictxt, 8)
         @test_throws ScaLAPACKError(-3) descinit(9, -1, 5, 3, 1, 0, ictxt, 8)
         @test_throws ScaLAPACKError(-4) descinit(9, 7, 0, 3, 1, 0, ictxt, 8)
