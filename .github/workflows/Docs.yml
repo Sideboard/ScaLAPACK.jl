@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      JULIA_SCALAPACK_LIBRARY: libscalapack-openmpi
     steps:
       - uses: actions/checkout@v2
+      - name: Install ScaLAPACK
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libscalapack-openmpi-dev
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
-      - name: Build test with 'system'
-        env:
-          JULIA_MPI_BINARY: system
-        shell: julia --color=yes --project=test {0}
-        run: |          
-          using Pkg
-          Pkg.add("MPI")
-          Pkg.build("MPI"; verbose=true)
+          arch: x64
+      - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-docdeploy@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
