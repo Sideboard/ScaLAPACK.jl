@@ -38,18 +38,18 @@ function parse_commandline()
             arg_type = Int
             default = 0
 
-        "--print-matrices"
-            help = "Whether to print A, B, X"
-            action = :store_true
         "--afile", "-A"
             help = "File to write A into"
-            default = "A"
+            arg_type = String
+            default = ""
         "--bfile", "-B"
             help = "File to write B into"
-            default = "B"
+            arg_type = String
+            default = ""
         "--xfile", "-X"
             help = "File to write X into"
-            default = "X"
+            arg_type = String
+            default = ""
 
         "--allout"
             help = "All processes print"
@@ -130,6 +130,9 @@ end
 
 function main()
     args = parse_commandline()
+    afile = strip(args["afile"])
+    bfile = strip(args["bfile"])
+    xfile = strip(args["xfile"])
 
     mypnum, nprocs = blacs_pinfo()
     args["allout"] && mypnum != 0 && redirect_stdout(open("/dev/null", "w"))
@@ -163,17 +166,16 @@ function main()
 
     mg < ng && error("X will not fit into B: mg = $mg < $ng = ng")
 
-    do_files = args["print-matrices"]
-
     A = prandom_each(mg, ng, mb, nb, ml, nl, mypnum, nprocs, seed=0)
-    B = prandom_each(mg, kg, mb, kb, ml, kl, mypnum, nprocs, seed=1)
     descA = descinit(mg, ng, mb, nb, 0, 0, ictxt, ml)
+    length(afile) > 0 && pmatrix_to_file(A, afile, mypnum)
+
+    B = prandom_each(mg, kg, mb, kb, ml, kl, mypnum, nprocs, seed=1)
     descB = descinit(mg, kg, mb, kb, 0, 0, ictxt, ml)
-    do_files && pmatrix_to_file(A, "A", mypnum)
-    do_files && pmatrix_to_file(B, "B", mypnum)
+    length(bfile) > 0 && pmatrix_to_file(B, bfile, mypnum)
 
     X, descX = solve_qr!(A, descA, B, descB)
-    do_files && pmatrix_to_file(X, "X", mypnum)
+    length(xfile) > 0 && pmatrix_to_file(X, xfile, mypnum)
 
     blacs_gridexit(ictxt)
     blacs_exit(0)
