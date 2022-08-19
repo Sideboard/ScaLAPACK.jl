@@ -72,7 +72,7 @@ jobs:
       JULIA_MPI_TEST_BINARY: system
       JULIA_SCALAPACK_LIBRARY: ${{ matrix.scalapack }}
       JULIA_SCALAPACK_BLACS_LIBRARY: libmkl_blacs_intelmpi_lp64
-      JULIA_SCALAPACK_PRELOAD_LIBRARIES: libmkl:libmkl_rt
+      JULIA_SCALAPACK_PRELOAD_LIBRARIES: libmpi:libmkl_rt
     steps:
       - uses: actions/checkout@v2
       - name: Install Intel OneAPI
