@@ -94,12 +94,12 @@ jobs:
       - uses: julia-actions/cache@v1
       - name: Set up Intel oneAPI environment
         run: |
-          . /opt/intel/oneapi/setvars.sh
+          source /opt/intel/oneapi/setvars.sh
           printenv >> $GITHUB_ENV
       - name: Build test with 'system'
         env:
           JULIA_MPI_BINARY: system
-        shell: source /opt/intel/oneapi/setvars.sh ; julia --color=yes --project=test {0}
+        shell: julia --color=yes --project=test {0}
         run: |
           using Pkg
           Pkg.add("MPI")
