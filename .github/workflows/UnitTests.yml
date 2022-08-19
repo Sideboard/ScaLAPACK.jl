@@ -94,7 +94,7 @@ jobs:
       - uses: julia-actions/cache@v1
       - name: Set up Intel oneAPI environment
         run: |
-          source /opt/intel/oneapi/setvars.sh
+          . /opt/intel/oneapi/setvars.sh
           printenv >> $GITHUB_ENV
       - name: Build test with 'system'
         env:
