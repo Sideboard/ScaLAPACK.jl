@@ -47,7 +47,7 @@ jobs:
         env:
           JULIA_MPI_BINARY: system
         shell: julia --color=yes --project=test {0}
-        run: |          
+        run: |
           using Pkg
           Pkg.add("MPI")
           Pkg.build("MPI"; verbose=true)
@@ -92,11 +92,15 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
+      - name: Set up Intel oneAPI environment
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          printenv >> $GITHUB_ENV
       - name: Build test with 'system'
         env:
           JULIA_MPI_BINARY: system
-        shell: julia --color=yes --project=test {0}
-        run: |          
+        shell: source /opt/intel/oneapi/setvars.sh ; julia --color=yes --project=test {0}
+        run: |
           using Pkg
           Pkg.add("MPI")
           Pkg.build("MPI"; verbose=true)
