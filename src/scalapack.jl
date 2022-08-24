@@ -1,3 +1,13 @@
+# SUBROUTINE PDGEBRD( M, N, A, IA, JA, DESCA, D, E, TAUQ, TAUP, WORK, LWORK, INFO )
+function pdgebrd!(m::Integer, n::Integer, A::Array{Float64}, ia::Integer, ja::Integer,
+        desca::Vector{Cint}, d::Vector{Float64}, e::Vector{Float64}, tauq::Vector{Float64},
+        taup::Vector{Float64}, work::Vector{Float64}, lwork::Integer, info::Ref{Cint})
+    ccall((:pdgebrd_, libscalapack), Cvoid,
+        (Ref{Cint}, Ref{Cint}, Ref{Float64}, Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Float64},
+        Ref{Float64}, Ref{Float64}, Ref{Float64}, Ref{Float64}, Ref{Cint}, Ref{Cint}),
+        m, n, A, ia, ja, desca, d, e, tauq, taup, work, lwork, info)
+end
+
 # SUBROUTINE PDGEQRF( M, N, A, IA, JA, DESCA, TAU, WORK, LWORK, INFO )
 function pdgeqrf!(m::Integer, n::Integer, A::Array{Float64}, ia::Integer, ja::Integer,
         desca::Vector{Cint}, tau::Vector{Float64}, work::Vector{Float64}, lwork::Integer,

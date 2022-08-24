@@ -10,7 +10,7 @@ export blacs_exit, blacs_get!, blacs_get, blacs_gridexit, blacs_gridinfo!, blacs
 export descinit!, descinit, numroc, sl_init!, sl_init
 export pdgemr2d!
 export pdgemm!, pdtrmm!
-export pdgeqrf!, pdorgqr!, pdormqr!, pdtrtrs!
+export pdgebrd!, pdgeqrf!, pdorgqr!, pdormqr!, pdtrtrs!
 
 
 const libscalapack_name = get(ENV, "JULIA_SCALAPACK_LIBRARY", "libscalapack")
