@@ -10,9 +10,6 @@ function parse_commandline()
         Solve singular value decomposition (SVD):
             A(m,n) = U(m,m) S(m,n) V(n,n) with m ≫ n > 0 using {p,1} process grid
 
-        We create the random numbers for A element-wise for reproducibility and locally to
-        keep the memory peak small.
-        
         V is the transpose of the column matrix (i.e. technically VT).
         """
 
