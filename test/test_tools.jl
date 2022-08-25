@@ -2,6 +2,27 @@ include("common.jl")
 
 @testset "TOOLS" begin
 
+@testset "indxg2l" begin
+    # indxg2l(indxglob, nb, iproc, isrcproc, nprocs)
+    @test indxg2l(97, 9, -1, -1, 2) == 52
+    @test indxg2l(97, 9, -1, -1, 3) == 34
+    @test indxg2l(97, 9, -1, -1, 4) == 25
+end
+
+@testset "indxg2p" begin
+    # indxg2p(indxglob, nb, iproc, isrcproc, nprocs)
+    @test indxg2p(97, 9, -1, 1, 2) == 1
+    @test indxg2p(97, 9, -1, 1, 3) == 2
+    @test indxg2p(97, 9, -1, 1, 4) == 3
+end
+
+@testset "indxl2g" begin
+    # indxl2g(indxloc, nb, iproc, isrcproc, nprocs)
+    @test indxl2g(97, 9, 0, 1, 3) == 295
+    @test indxl2g(97, 9, 1, 1, 3) == 277
+    @test indxl2g(97, 9, 2, 1, 3) == 286
+end
+
 @testset "numroc" begin
     # numroc(n, nb, iproc, isrcproc, nprocs)
     @test numroc(97, 9, 0, 1, 3) == 27
