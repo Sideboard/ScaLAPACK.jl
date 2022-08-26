@@ -11,16 +11,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 jobs:
-  test:
+  test-open:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ matrix.scalapack }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         version:
-          - '1.2'
+          # - '1.2'
           - '1.7'
-          - 'nightly'
+          # - 'nightly'
         os:
           - ubuntu-latest
         arch:
@@ -47,7 +47,60 @@ jobs:
         env:
           JULIA_MPI_BINARY: system
         shell: julia --color=yes --project=test {0}
-        run: |          
+        run: |
+          using Pkg
+          Pkg.add("MPI")
+          Pkg.build("MPI"; verbose=true)
+      - uses: julia-actions/julia-runtest@v1
+  test-intel:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ matrix.scalapack }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.7'
+        os:
+          - ubuntu-latest
+        arch:
+          - x64
+        scalapack:
+          - libmkl_scalapack_lp64
+    timeout-minutes: 5
+    env:
+      JULIA_MPI_TEST_NPROCS: 2
+      JULIA_MPI_TEST_BINARY: system
+      JULIA_SCALAPACK_LIBRARY: ${{ matrix.scalapack }}
+      JULIA_SCALAPACK_BLACS_LIBRARY: libmkl_blacs_intelmpi_lp64
+      JULIA_SCALAPACK_PRELOAD_LIBRARIES: libmpi:libmkl_rt
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Intel OneAPI
+        if: ${{ matrix.scalapack == 'libmkl_scalapack_lp64' }}
+        run: |
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+          sudo apt-get update -y
+          sudo apt-get install -y intel-oneapi-common-vars
+          sudo apt-get install -y intel-oneapi-mkl
+          sudo apt-get install -y intel-oneapi-mpi
+          sudo apt-get install -y intel-oneapi-mpi-devel
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: julia-actions/cache@v1
+      - name: Set up Intel oneAPI environment
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          printenv >> $GITHUB_ENV
+      - name: Build test with 'system'
+        env:
+          JULIA_MPI_BINARY: system
+        shell: julia --color=yes --project=test {0}
+        run: |
           using Pkg
           Pkg.add("MPI")
           Pkg.build("MPI"; verbose=true)

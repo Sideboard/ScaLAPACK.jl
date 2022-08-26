@@ -56,7 +56,7 @@ function parse_commandline()
             action = :store_true
         "--order"
             help = "Whether matrices are row-major (R) or col-major (C) order"
-            range_tester = (x -> x == 'R' || x == 'C')
+            range_tester = (x -> (x[1] == 'R') || (x[1] == 'C'))
             default = 'R'
     end
 
@@ -109,11 +109,14 @@ function main()
     xfile = strip(args["xfile"])
 
     mypnum, nprocs = blacs_pinfo()
-    args["allout"] && mypnum != 0 && redirect_stdout(open("/dev/null", "w"))
+    !args["allout"] && mypnum != 0 && redirect_stdout(open("/dev/null", "w"))
 
     ictxt = blacs_get(0, 0)
-    blacs_gridinit(ictxt, args["order"], nprocs, 1)
+
+    order = Char(args["order"][1])
+    blacs_gridinit(ictxt, order, nprocs, 1)
     nprow, npcol, myrow, mycol = blacs_gridinfo(ictxt)
+    nprow < 0 && error("BLACS grid broken, context: $ictxt")
 
     mg = args["nrows"]
     if mg < 1

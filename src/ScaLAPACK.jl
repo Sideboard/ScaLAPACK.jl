@@ -1,8 +1,9 @@
 module ScaLAPACK
 
-import Libdl: find_library  # explicit import backwards compatibility
+using Libdl  # import Libdl for backwards compatibility
 
-export libscalapack, libblacs
+
+export libblacs, libscalapack, dlopen_flags, lib_handles
 export ScaLAPACKError
 
 export blacs_exit, blacs_get!, blacs_get, blacs_gridexit, blacs_gridinfo!, blacs_gridinfo,
@@ -13,14 +14,30 @@ export pdgemm!, pdtrmm!
 export pdgebrd!, pdgeqrf!, pdgesvd!, pdorgqr!, pdormqr!, pdtrtrs!
 
 
-const libscalapack_name = get(ENV, "JULIA_SCALAPACK_LIBRARY", "libscalapack")
-const libscalapack = find_library(libscalapack_name)
-libscalapack == "" && error("ScaLAPACK library $libscalapack_name not found")
+const lib_handles = []
+const dlopen_flags = RTLD_LAZY|RTLD_DEEPBIND|RTLD_GLOBAL
 
-const libblacs_name = get(ENV, "JULIA_BLACS_LIBRARY", libscalapack_name)
-const libblacs = find_library(libblacs_name)  # differs for Intel/MKL
-libblacs == "" && error("BLACS library $libblacs_name not found")
+# calls will use dlopened libs instead, set stubs to keep calls the same
+const libblacs = ""
+const libscalapack = ""
 
+function __init__()
+    libscalapack = get(ENV, "JULIA_SCALAPACK_LIBRARY", "libscalapack")
+    libblacs = get(ENV, "JULIA_SCALAPACK_BLACS_LIBRARY", libscalapack)
+
+    preload_libs = get(ENV, "JULIA_SCALAPACK_PRELOAD_LIBRARIES", "")
+    preload_libs = split(preload_libs, ":")
+    for libpreload in preload_libs
+        isempty(libpreload) && continue
+        handle = dlopen(libpreload, dlopen_flags)
+        push!(lib_handles, handle)
+    end
+
+    libblacs_handle = dlopen(libblacs, dlopen_flags)
+    push!(lib_handles, libblacs_handle)
+    libscalapack_handle = dlopen(libscalapack, dlopen_flags)
+    push!(lib_handles, libscalapack_handle)
+end
 
 include("error.jl")
 
