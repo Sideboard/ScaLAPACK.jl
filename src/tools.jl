@@ -16,6 +16,27 @@ function descinit(m::Integer, n::Integer, mb::Integer, nb::Integer, irsrc::Integ
     return desc
 end
 
+# INTEGER FUNCTION INDXG2L( INDXGLOB, NB, IPROC, ISRCPROC, NPROCS )
+function indxg2l(indxglob, nb, iproc, isrcproc, nprocs)
+    ccall((:indxg2l_, libscalapack), Cint,
+        (Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cint}),
+        indxglob, nb, iproc, isrcproc, nprocs)
+end
+
+# INTEGER FUNCTION INDXG2P( INDXGLOB, NB, IPROC, ISRCPROC, NPROCS )
+function indxg2p(indxglob, nb, iproc, isrcproc, nprocs)
+    ccall((:indxg2p_, libscalapack), Cint,
+        (Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cint}),
+        indxglob, nb, iproc, isrcproc, nprocs)
+end
+
+# INTEGER FUNCTION INDXL2G( INDXLOC, NB, IPROC, ISRCPROC, NPROCS )
+function indxl2g(indxloc, nb, iproc, isrcproc, nprocs)
+    ccall((:indxl2g_, libscalapack), Cint,
+        (Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cint}, Ref{Cint}),
+        indxloc, nb, iproc, isrcproc, nprocs)
+end
+
 # INTEGER FUNCTION NUMROC( N, NB, IPROC, ISRCPROC, NPROCS )
 function numroc(n, nb, iproc, isrcproc, nprocs)
     ccall((:numroc_, libscalapack), Cint,

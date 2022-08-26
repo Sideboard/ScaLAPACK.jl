@@ -8,10 +8,10 @@ export ScaLAPACKError
 
 export blacs_exit, blacs_get!, blacs_get, blacs_gridexit, blacs_gridinfo!, blacs_gridinfo,
     blacs_gridinit, blacs_pinfo!, blacs_pinfo, blacs_setup!, blacs_setup
-export descinit!, descinit, numroc, sl_init!, sl_init
+export descinit!, descinit, indxg2l, indxg2p, indxl2g, numroc, sl_init!, sl_init
 export pdgemr2d!
 export pdgemm!, pdtrmm!
-export pdgeqrf!, pdorgqr!, pdormqr!, pdtrtrs!
+export pdgebrd!, pdgeqrf!, pdgesvd!, pdorgqr!, pdormqr!, pdtrtrs!
 
 
 const lib_handles = []

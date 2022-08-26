@@ -2,13 +2,13 @@ import Random
 using ArgParse
 using ScaLAPACK
 
+include("common.jl")
+
 function parse_commandline()
     s = ArgParseSettings()
     s.description = """
-        Solve A(m,n) X(n,k) = B(m,k) for X with m ≫ n > 0 using {p,1} process grid
-
-        We create the random numbers for A and B element-wise for reproducibility
-        and locally to keep the memory peak small.
+        Solve least-squares problem via QR decomposition:
+            A(m,n) X(n,k) = B(m,k) for X with m ≫ n > 0 using {p,1} process grid
         """
 
     @add_arg_table s begin
@@ -61,32 +61,6 @@ function parse_commandline()
     end
 
     return parse_args(s)
-end
-
-function prandom_each(mg, ng, mb, nb, ml, nl, mypnum, nprocs; seed=-1)
-    @assert mb * nprocs >= mg  # simpler locating
-
-    A = zeros(ml, nl)
-    v = zeros(1)
-
-    offset = mypnum * mb
-
-    seed >= 0 && Random.seed!(seed)
-    for j in 1:ng, i in 1:mg
-        Random.rand!(v)
-        li = i - offset
-        if 0 < li <= ml
-            A[li,j] = v[1]
-        end
-    end
-
-    return A
-end
-
-function pmatrix_to_file(matrix, prefix, mypnum)
-    open("$prefix.$mypnum", "w") do f
-        println(f, matrix)
-    end
 end
 
 function solve_qr!(A::Array{Float64}, descA::Vector{Cint},
@@ -169,11 +143,11 @@ function main()
 
     mg < ng && error("X will not fit into B: mg = $mg < $ng = ng")
 
-    A = prandom_each(mg, ng, mb, nb, ml, nl, mypnum, nprocs, seed=0)
+    A = prand(mg, ng, mb, nb, ml, nl, nprow, npcol, myrow, mycol, seed=0)
     descA = descinit(mg, ng, mb, nb, 0, 0, ictxt, ml)
     length(afile) > 0 && pmatrix_to_file(A, afile, mypnum)
 
-    B = prandom_each(mg, kg, mb, kb, ml, kl, mypnum, nprocs, seed=1)
+    B = prand(mg, kg, mb, kb, ml, kl, nprow, npcol, myrow, mycol, seed=1)
     descB = descinit(mg, kg, mb, kb, 0, 0, ictxt, ml)
     length(bfile) > 0 && pmatrix_to_file(B, bfile, mypnum)
 
